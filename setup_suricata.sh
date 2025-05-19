@@ -73,12 +73,14 @@ if nmcli device show "$LAN_IF" >/dev/null 2>&1; then
       LAN_CON="LAN-$LAN_IF"
     fi
   fi
+  sudo nmcli connection delete "$LAN_CON"
+  sudo nmcli connection add type ethernet ifname "$LAN_IF" con-name "LAN-$LAN_IF" autoconnect yes
+  sudo nmcli connection modify "LAN-$LAN_IF" ipv4.addresses 192.168.1.1/24
+  sudo nmcli connection modify "LAN-$LAN_IF" ipv4.gateway ""
+  sudo nmcli connection modify "LAN-$LAN_IF" ipv4.method manual
+  sudo nmcli connection up "LAN-$LAN_IF"
 
-  nmcli connection modify "$LAN_CON" ipv4.addresses 192.168.1.1/24
-  nmcli connection modify "$LAN_CON" ipv4.gateway ""
-  nmcli connection modify "$LAN_CON" ipv4.method manual
-  nmcli connection down "$LAN_CON"
-  nmcli connection up "$LAN_CON"
+
 
 else
   echo "[-] LAN interface $LAN_IF is not managed by NetworkManager"
