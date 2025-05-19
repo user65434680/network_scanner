@@ -16,6 +16,25 @@ if ! command -v nmcli >/dev/null 2>&1; then
     exit 1
 fi
 
+
+echo "[+] Enabling NetworkManager control over all interfaces..."
+
+CONF_FILE="/etc/NetworkManager/NetworkManager.conf"
+
+if [ ! -f "$CONF_FILE.bak" ]; then
+    echo "[+] Backing up $CONF_FILE to $CONF_FILE.bak"
+    sudo cp "$CONF_FILE" "$CONF_FILE.bak"
+fi
+
+if grep -q "^\[ifupdown\]" "$CONF_FILE"; then
+    sudo sed -i '/^\[ifupdown\]/,/^\[/{s/^managed=.*/managed=true/}' "$CONF_FILE"
+else
+    echo -e "\n[ifupdown]\nmanaged=true" | sudo tee -a "$CONF_FILE" > /dev/null
+fi
+
+echo "[+] Restarting NetworkManager service..."
+sudo systemctl restart NetworkManager
+
 WAN_IF="${interfaces[0]}"
 LAN_IF="${interfaces[1]}"
 
@@ -56,7 +75,7 @@ if nmcli device show "$LAN_IF" >/dev/null 2>&1; then
   fi
 
   nmcli connection modify "$LAN_CON" ipv4.addresses 192.168.1.1/24
-  nmcli connection modify "$LAN_CON" ipv4.gateway 192.168.1.1
+  nmcli connection modify "$LAN_CON" ipv4.gateway ""
   nmcli connection modify "$LAN_CON" ipv4.method manual
   nmcli connection down "$LAN_CON"
   nmcli connection up "$LAN_CON"
