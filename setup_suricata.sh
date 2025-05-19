@@ -11,13 +11,18 @@ if [ "${#interfaces[@]}" -lt 2 ]; then
   exit 1
 fi
 
+if ! command -v nmcli >/dev/null 2>&1; then
+    echo "[-] Error: nmcli is not installed. Please install NetworkManager."
+    exit 1
+fi
+
 WAN_IF="${interfaces[0]}"
 LAN_IF="${interfaces[1]}"
 
 echo "[+] Using WAN interface: $WAN_IF"
 echo "[+] Using LAN interface: $LAN_IF"
 
-if nmcli device status | grep -q "$WAN_IF.*managed"; then
+if nmcli device show "$WAN_IF" >/dev/null 2>&1; then
   echo "[+] Configuring WAN interface ($WAN_IF) to use DHCP with nmcli..."
 
   WAN_CON=$(nmcli -t -f NAME,DEVICE connection show --active | grep "$WAN_IF" | cut -d: -f1)
@@ -34,10 +39,10 @@ if nmcli device status | grep -q "$WAN_IF.*managed"; then
   nmcli connection up "$WAN_CON"
 
 else
-  echo "[-] WAN interface $WAN_IF is not managed by NetworkManager or nmcli not installed"
+  echo "[-] WAN interface $WAN_IF is not managed by NetworkManager"
 fi
 
-if nmcli device status | grep -q "$LAN_IF.*managed"; then
+if nmcli device show "$LAN_IF" >/dev/null 2>&1; then
   echo "[+] Configuring LAN interface ($LAN_IF) with static IP 192.168.1.1/24 using nmcli..."
 
   LAN_CON=$(nmcli -t -f NAME,DEVICE connection show --active | grep "$LAN_IF" | cut -d: -f1)
@@ -57,7 +62,7 @@ if nmcli device status | grep -q "$LAN_IF.*managed"; then
   nmcli connection up "$LAN_CON"
 
 else
-  echo "[-] LAN interface $LAN_IF is not managed by NetworkManager or nmcli not installed"
+  echo "[-] LAN interface $LAN_IF is not managed by NetworkManager"
 fi
 
 echo "[+] Enabling IP forwarding..."

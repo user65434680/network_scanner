@@ -20,7 +20,7 @@ echo "[*] Enabling Suricata to start on boot..."
 sudo systemctl enable suricata
 
 echo "[*] install other useful tools..."
-iptables iptables-persistent ethtool tcpdump iftop
+sudo apt install iptables iptables-persistent ethtool tcpdump iftop -y
 
 echo "[*] Starting Suricata service..."
 sudo systemctl start suricata
