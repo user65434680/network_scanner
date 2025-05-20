@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo chmod +x *.sh *.py
+
 sudo bash install.sh
 
 sleep 15
