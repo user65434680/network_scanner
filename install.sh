@@ -13,6 +13,9 @@ if ! command -v suricata-update &> /dev/null; then
     sudo pip3 install --upgrade suricata-update
 fi
 
+echo "[*] Downloading additional rule sets..."
+sudo suricata-update --install-rules
+
 echo "[*] Updating Suricata rules..."
 sudo suricata-update
 
@@ -22,11 +25,15 @@ sudo systemctl enable suricata
 echo "[*] install other useful tools..."
 sudo apt install iptables iptables-persistent ethtool tcpdump iftop -y
 
+echo "[*] install yq via snap..."
+sudo snap install yq
+
 echo "[*] Starting Suricata service..."
 sudo systemctl start suricata
 
 echo "[*] Suricata status:"
 sudo systemctl status suricata --no-pager
+
 
 echo "[*] Suricata logs will be written to /var/log/suricata/"
 echo "[*] Fast log: /var/log/suricata/fast.log"

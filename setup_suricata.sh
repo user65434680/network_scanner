@@ -118,9 +118,29 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
+echo "[*] Configuring Suricata interfaces..."
+WAN_IF=$(ip -o -4 route show to default | awk '{print $5}')
+LAN_IF="eth1"
+
+echo "[*] Setting Suricata to listen on $WAN_IF and $LAN_IF..."
+sudo sed -i "s|# interface: .*|interface: $WAN_IF|" /etc/suricata/suricata.yaml
+sudo sed -i "s|# interface: .*|interface: $LAN_IF|" /etc/suricata/suricata.yaml
+
+echo "[*] Enabling eve-log output for dns, http, and tls..."
+
+sudo yq eval '
+  (.outputs[] | select(.eve-log != null) | .eve-log) += {
+    "enabled": true,
+    "filetype": "regular",
+    "filename": "/var/log/suricata/eve.json",
+    "types": ["dns", "http", "tls"]
+  }
+' -i /etc/suricata/suricata.yaml
+
+
 echo "[+] Reloading systemd daemon and enabling Suricata service..."
 sudo systemctl daemon-reload
 sudo systemctl enable suricata.service
-sudo systemctl start suricata.service
+sudo systemctl restart suricata.service
 
 echo "[+] Setup complete. Suricata is running on interfaces $WAN_IF and $LAN_IF and will auto-start on boot."
