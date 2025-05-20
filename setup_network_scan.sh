@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# setup network scanner for controller
 SCRIPT_PATH="/opt/network_scan/network_scan.py"
 SERVICE_PATH="/etc/systemd/system/network_scan.service"
 

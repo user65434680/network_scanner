@@ -3,7 +3,7 @@
 import json
 import time
 from collections import defaultdict
-
+# Network scanner for controller
 LOG_FILE = "/var/log/suricata/eve.json"
 visited_by_ip = defaultdict(set)
 
