@@ -5,6 +5,7 @@ import time
 from collections import defaultdict
 # Network scanner for controller
 LOG_FILE = "/var/log/suricata/eve.json"
+LOG_OUTPUT_FILE = "/opt/network_scan/logged_connections.txt"
 visited_by_ip = defaultdict(set)
 
 def parse_log_line(line):
@@ -52,12 +53,20 @@ def main():
             parse_log_line(line)
 
             if time.time() - last_print >= 10:
-                print("\n--- Websites Visited by Internal IP ---\n")
+                output_lines = ["\n--- Websites Visited by Internal IP ---\n"]
                 for ip, sites in visited_by_ip.items():
-                    print(f"{ip}:")
+                    output_lines.append(f"{ip}:")
                     for site in sorted(sites):
-                        print(f"  - {site}")
-                    print()
+                        output_lines.append(f"  - {site}")
+                    output_lines.append("")
+
+                output_text = "\n".join(output_lines)
+                print(output_text)
+
+
+                with open(LOG_OUTPUT_FILE, "a") as logfile:
+                    logfile.write(output_text)
+
                 last_print = time.time()
 
 if __name__ == "__main__":

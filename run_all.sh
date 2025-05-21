@@ -10,6 +10,10 @@ sudo bash setup_suricata.sh
 
 sleep 15
 
+sudo edit_yaml.py
+
+sleep 15
+
 sudo bash setup_network_scan.sh
 
 sleep 15

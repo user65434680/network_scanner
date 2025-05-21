@@ -6,7 +6,7 @@ echo "[*] Updating package lists..."
 sudo apt update
 
 echo "[*] Installing Suricata and related tools..."
-sudo apt install -y suricata jq python3-pip
+sudo apt install -y suricata jq python3-pip 
 
 if ! command -v suricata-update &> /dev/null; then
     echo "[*] Installing suricata-update via pip..."
