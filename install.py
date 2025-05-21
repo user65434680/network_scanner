@@ -31,9 +31,6 @@ def main():
         print("[*] Installing suricata-update via pip...")
         run_command(["sudo", "pip3", "install", "--upgrade", "suricata-update"])
 
-    print("[*] Downloading additional rule sets...")
-    run_command(["sudo", "suricata-update", "--install-rules"])
-
     print("[*] Updating Suricata rules...")
     run_command(["sudo", "suricata-update"])
 
@@ -46,9 +43,6 @@ def main():
         "iptables", "iptables-persistent", "ethtool", "tcpdump", "iftop"
     ])
 
-    print("[*] Installing yq via snap...")
-    run_command(["sudo", "snap", "install", "yq"])
-
     print("[*] Starting Suricata service...")
     run_command(["sudo", "systemctl", "start", "suricata"])
 
@@ -60,6 +54,9 @@ def main():
     print("[*] JSON log: /var/log/suricata/eve.json")
     print("\n[*] To monitor alerts in real time, run:")
     print("    sudo tail -f /var/log/suricata/fast.log")
+
+    print("[*] Installing yq via snap...")
+    run_command(["sudo", "snap", "install", "yq"])
 
 if __name__ == "__main__":
     main()
