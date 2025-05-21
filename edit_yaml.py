@@ -1,6 +1,7 @@
 import yaml
 import sys
 import os
+import subprocess
 
 CONFIG_PATH = "/etc/suricata/suricata.yaml"
 BACKUP_PATH = CONFIG_PATH + ".bak"
@@ -46,6 +47,15 @@ def update_eve_log(config):
     config["outputs"] = outputs
     return config
 
+def restart_suricata():
+    print("[*] Restarting Suricata service...")
+    try:
+        subprocess.run(["sudo", "systemctl", "restart", "suricata"], check=True)
+        print("[+] Suricata restarted successfully.")
+    except subprocess.CalledProcessError as e:
+        print("[-] Failed to restart Suricata. Please check the service status.")
+        sys.exit(1)
+
 def main():
     backup_config()
 
@@ -63,6 +73,8 @@ def main():
     except Exception as e:
         print(f"[-] Failed to save YAML: {e}")
         sys.exit(1)
+
+    restart_suricata()
 
 if __name__ == "__main__":
     main()
