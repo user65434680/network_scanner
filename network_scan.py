@@ -137,6 +137,9 @@ def format_connection(entry):
 
 def main():
     print("[*] Monitoring Suricata logs... (updates every 10 seconds)\n")
+    
+    unique_domains = defaultdict(set)
+    
     with open(LOG_FILE, "r") as f:
         log_lines = follow_file(f)
         last_print = time.time()
@@ -146,11 +149,26 @@ def main():
 
             if time.time() - last_print >= 10:
                 output_lines = [f"\n--- {current_time()} - Connections Log ---\n"]
+                
                 for ip, entries in visited_by_ip.items():
-                    output_lines.append(f"{ip}:")
-                    for e in entries:
-                        output_lines.append(f"  - {format_connection(e)}")
-                    output_lines.append("")
+                    current_domains = set()
+                    filtered_entries = []
+                    
+                    for entry in entries:
+
+                        if entry["type"] == "DNS":
+                            domain = entry["domain"]
+                            if domain not in unique_domains[ip]:
+                                unique_domains[ip].add(domain)
+                                filtered_entries.append(entry)
+                        else:
+                            filtered_entries.append(entry)
+                    
+                    if filtered_entries:
+                        output_lines.append(f"{ip}:")
+                        for e in filtered_entries:
+                            output_lines.append(f"  - {format_connection(e)}")
+                        output_lines.append("")
 
                 output_text = "\n".join(output_lines)
                 print(output_text)
