@@ -3,7 +3,7 @@
 import json
 import time
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 LOG_FILE = "/var/log/suricata/eve.json"
 LOG_OUTPUT_FILE = "/opt/network_scan/logged_connections.txt"
@@ -137,7 +137,8 @@ def format_connection(entry):
 def main():
     print("[*] Monitoring Suricata logs... (updates every 10 seconds)\n")
     
-    unique_domains = defaultdict(set)
+    unique_entries = set()
+    last_clear_time = datetime.utcnow()
     
     with open(LOG_FILE, "r") as f:
         log_lines = follow_file(f)
@@ -146,21 +147,30 @@ def main():
         for line in log_lines:
             parse_log_line(line)
 
+            current_time_check = datetime.utcnow()
+            if current_time_check - last_clear_time > timedelta(days=2):
+                unique_entries.clear()
+                last_clear_time = current_time_check
+                print(f"[*] Cleared entries cache at {current_time_check.strftime('%Y-%m-%d %H:%M:%S UTC')}")
+
             if time.time() - last_print >= 10:
                 output_lines = [f"\n--- {current_time()} - Connections Log ---\n"]
                 
                 for ip, entries in visited_by_ip.items():
-                    current_domains = set()
                     filtered_entries = []
                     
                     for entry in entries:
-
                         if entry["type"] == "DNS":
-                            domain = entry["domain"]
-                            if domain not in unique_domains[ip]:
-                                unique_domains[ip].add(domain)
-                                filtered_entries.append(entry)
+                            entry_id = f"{entry['type']}:{entry['domain']}"
+                        elif entry["type"] == "HTTP":
+                            entry_id = f"{entry['type']}:{entry['host']}{entry['url']}"
+                        elif entry["type"] == "TLS":
+                            entry_id = f"{entry['type']}:{entry['sni']}:{entry['dest_ip']}"
                         else:
+                            entry_id = f"{entry['type']}:{entry['dest_ip']}:{entry['timestamp']}"
+
+                        if entry_id not in unique_entries:
+                            unique_entries.add(entry_id)
                             filtered_entries.append(entry)
                     
                     if filtered_entries:
@@ -176,6 +186,7 @@ def main():
                     logfile.write(output_text + "\n")
                     logfile.flush()
 
+                visited_by_ip.clear()
                 last_print = time.time()
 
 if __name__ == "__main__":
