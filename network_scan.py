@@ -135,7 +135,7 @@ def format_connection(entry):
 
 
 def main():
-    print("[*] Monitoring Suricata logs... (updates every 10 seconds)\n")
+    print("[*] Monitoring Suricata logs... (updates every 10 minutes)\n")
     
     unique_entries = set()
     last_clear_time = datetime.utcnow()
@@ -153,7 +153,7 @@ def main():
                 last_clear_time = current_time_check
                 print(f"[*] Cleared entries cache at {current_time_check.strftime('%Y-%m-%d %H:%M:%S UTC')}")
 
-            if time.time() - last_print >= 10:
+            if time.time() - last_print >= 600:
                 output_lines = [f"\n--- {current_time()} - Connections Log ---\n"]
                 
                 for ip, entries in visited_by_ip.items():
