@@ -10,9 +10,6 @@ sudo ./install.py
 echo "[*] Running setup_suricata.sh..."
 sudo ./setup_suricata.sh
 
-echo "[*] Running edit_yaml.py..."
-sudo python3 $(realpath edit_yaml.py)
-
 echo "[*] Running setup_network_scan.sh..."
 sudo ./setup_network_scan.sh
 
