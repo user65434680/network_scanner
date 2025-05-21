@@ -10,7 +10,7 @@ sudo bash setup_suricata.sh
 
 sleep 15
 
-sudo ./edit_yaml.py
+sudo python3 edit_yaml.py
 
 sleep 15
 
