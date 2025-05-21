@@ -30,7 +30,11 @@ def update_eve_log(config):
             eve["enabled"] = True
             eve["filetype"] = "regular"
             eve["filename"] = "/var/log/suricata/eve.json"
-            eve["types"] = ["dns", "http", "tls"]
+            eve["types"] = [
+                {"http": {"extended": True}},
+                {"dns": {"version": 2, "enabled": True}},
+                {"tls": {"extended": True}}
+            ]
             eve_found = True
             break
 
@@ -41,12 +45,17 @@ def update_eve_log(config):
                 "enabled": True,
                 "filetype": "regular",
                 "filename": "/var/log/suricata/eve.json",
-                "types": ["dns", "http", "tls"]
+                "types": [
+                    {"http": {"extended": True}},
+                    {"dns": {"version": 2, "enabled": True}},
+                    {"tls": {"extended": True}}
+                ]
             }
         })
 
     config["outputs"] = outputs
     return config
+
 
 def restart_suricata():
     print("[*] Restarting Suricata service...")
