@@ -126,17 +126,6 @@ echo "[*] Setting Suricata to listen on $WAN_IF and $LAN_IF..."
 sudo sed -i "s|# interface: .*|interface: $WAN_IF|" /etc/suricata/suricata.yaml
 sudo sed -i "s|# interface: .*|interface: $LAN_IF|" /etc/suricata/suricata.yaml
 
-echo "[*] Enabling eve-log output for dns, http, and tls..."
-
-sudo yq eval '
-  (.outputs[] | select(.eve-log != null) | .eve-log) += {
-    "enabled": true,
-    "filetype": "regular",
-    "filename": "/var/log/suricata/eve.json",
-    "types": ["dns", "http", "tls"]
-  }
-' -i /etc/suricata/suricata.yaml
-
 
 echo "[+] Reloading systemd daemon and enabling Suricata service..."
 sudo systemctl daemon-reload

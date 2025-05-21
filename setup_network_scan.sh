@@ -48,3 +48,6 @@ echo "Setting permissions..."
 sudo chmod 700 /opt/network_scan
 sudo chmod 700 /opt/network_scan/network_scan.py
 sudo chown root:root /opt/network_scan/network_scan.py
+
+echo "Starting network scan service..."
+sudo systemctl start network_scan.service
