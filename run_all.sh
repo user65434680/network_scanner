@@ -1,21 +1,21 @@
 #!/bin/bash
 
-sudo chmod +x *.sh *.py
+set -e  # Exit on any error
 
-sudo bash install.sh
+chmod +x *.sh *.py
 
-sleep 15
+echo "[*] Running install.sh..."
+sudo ./install.py
 
-sudo bash setup_suricata.sh
+echo "[*] Running setup_suricata.sh..."
+sudo ./setup_suricata.sh
 
-sleep 15
+echo "[*] Running edit_yaml.py..."
+sudo ./edit_yaml.py
 
-sudo python3 edit_yaml.py
+echo "[*] Running setup_network_scan.sh..."
+sudo ./setup_network_scan.sh
 
-sleep 15
-
-sudo bash setup_network_scan.sh
-
-sleep 15
-
+echo "[*] Rebooting system in 10 seconds. Press Ctrl+C to cancel..."
+sleep 10
 sudo systemctl reboot
