@@ -13,6 +13,8 @@ sudo ./setup_suricata.sh
 echo "[*] Running setup_network_scan.sh..."
 sudo ./setup_network_scan.sh
 
-echo "[*] Rebooting system in 10 seconds. Press Ctrl+C to cancel..."
-sleep 10
-sudo systemctl reboot
+echo "[*] Running setup_active_pinging.sh..."
+sudo ./setup_active_pinging.sh
+
+echo "[*] Running remove_installation_files.sh..."
+sudo ./remove_installation_files.sh
