@@ -97,7 +97,6 @@ def parse_log_line(line):
 
 
     elif event_type == "flow" and entry.get("app_proto") == "failed":
-        # Flow to static IP without domain
         visited_by_ip[src_ip].append({
             "type": "RAW",
             "dest_ip": dest_ip,
