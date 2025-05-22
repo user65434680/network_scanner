@@ -9,7 +9,7 @@ from datetime import datetime
 def read_allowed_ips(filename):
     try:
         with open(filename, 'r') as f:
-            return set(line.strip() for line in f if line.strip())
+            return {line.strip() for line in f if line.strip()}
     except FileNotFoundError:
         print(f"[!] {filename} not found. Creating empty file.")
         Path(filename).touch()
@@ -30,10 +30,13 @@ def scan_network(network, allowed_ips):
     network = ipaddress.ip_network(network)
     
     print(f"[*] Scanning network {network}...")
+    print(f"[*] Allowed IPs: {allowed_ips}")
+    
     for ip in network.hosts():
         ip_str = str(ip)
         if ping(ip_str):
             print(f"[+] Host found: {ip_str}")
+            print(f"[*] Checking if {ip_str} in allowed_ips: {ip_str in allowed_ips}")
             if ip_str not in allowed_ips:
                 print(f"[!] Unauthorized IP detected: {ip_str}")
                 flags.append(ip_str)
