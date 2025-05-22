@@ -48,7 +48,7 @@ def extract_ips_from_inventory():
         print("No IPs found in either file.")
         return
 
-    output_file = '/opt/network_scan/allowed_ips.txt'
+    output_file = '/opt/active_pinging/allowed_ips.txt'
     try:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
