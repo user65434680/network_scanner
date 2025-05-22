@@ -35,7 +35,6 @@ def extract_ips_from_file(file_path):
 
 
 def extract_ips_from_inventory():
-
     ips = extract_ips_from_file(custom_clients_path)
 
     if ips:
@@ -49,11 +48,18 @@ def extract_ips_from_inventory():
         return
 
     output_file = '/opt/active_pinging/allowed_ips.txt'
+    flags_file = '/opt/active_pinging/flags.txt'
+    
     try:
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
         if os.path.exists(output_file):
             os.remove(output_file)
+            print(f"Removed existing {output_file}")
+        
+        if os.path.exists(flags_file):
+            os.remove(flags_file)
+            print(f"Removed existing {flags_file}")
 
         with open(output_file, 'w') as f_out:
             for ip in sorted(ips):
