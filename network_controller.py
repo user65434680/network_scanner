@@ -52,3 +52,6 @@ def control_menu():
             print("Invalid choice. Please select a valid option (1-7).")
             control_choice = input("Select an option (1-7): ").strip()
             continue
+
+if __name__ == "__main__":
+    control_menu()
