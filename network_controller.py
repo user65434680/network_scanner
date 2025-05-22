@@ -3,6 +3,7 @@
 import os
 import subprocess
 import sys
+from create_IP_file import extract_ips_from_inventory
 
 def control_menu():
     print("Control menu for starting and stopping Suricata, network_scan.service and active_pinging.service")
@@ -16,7 +17,7 @@ def control_menu():
     print("7. Change allowed IPs for active_pinging.service")
     print("8. Exit")
 
-    control_choice = input("Select an option (1-7): ").strip()
+    control_choice = input("Select an option (1-8): ").strip()
 
     while True:
         if control_choice == "1":
@@ -44,13 +45,13 @@ def control_menu():
             subprocess.run(["sudo", "systemctl", "stop", "active_pinging.service"], check=True)
             break
         elif control_choice == "7":
-            print("placeholder")
+            extract_ips_from_inventory()
         elif control_choice == "8":
             print("Exiting control menu.")
             sys.exit(0)
         else:
-            print("Invalid choice. Please select a valid option (1-7).")
-            control_choice = input("Select an option (1-7): ").strip()
+            print("Invalid choice. Please select a valid option (1-8).")
+            control_choice = input("Select an option (1-8): ").strip()
             continue
 
 if __name__ == "__main__":
