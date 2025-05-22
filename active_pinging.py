@@ -41,7 +41,7 @@ def scan_network(network, allowed_ips):
 
 def main():
 
-    base_dir = Path('/opt/network_scan')
+    base_dir = Path('/opt/active_pinging')
     allowed_ips_file = base_dir / "allowed_ips.txt"
     flags_file = base_dir / "flags.txt"
     network = "192.168.1.0/24"
