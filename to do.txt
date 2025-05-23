@@ -1,4 +1,0 @@
-Need to make custom inventory file convert to IP:s in txt format and copy that for active pinging
-
-Need to dock this as part of the main project
-

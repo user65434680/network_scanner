@@ -1,0 +1,9 @@
+Part of https://github.com/user65434680/ansible_controller
+
+Needs atleast two ethernet interfaces. eth0 (WAN) and eth1 (LAN). Needs a decent processor to keep up with logs. If installed by accident can be disabled from the control file in a supported environment (as part of the other project) 
+
+Is installed with the above projects install command. Functions on its own on another machine but not as well and it is not recommended, intented use nor supported.
+
+When installed removes unnecessary scripts from the folder to reduce bloat and to keep things more clean and understandable. Cleaned up scripts after install should not be needed in this directory anymore.
+
+Function of this project on its own or installed the wrong way is not guaranteed nor is the function guaranteed if packages needed for the code to function or the github itself is updated.
